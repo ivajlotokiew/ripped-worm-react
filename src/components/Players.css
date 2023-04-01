@@ -1,0 +1,18 @@
+.player-container {
+  position: relative;
+  border: 2px solid rgb(204, 201, 201);
+  border-radius: 1rem;
+  margin: 1rem;
+  padding: 2rem;
+}
+
+.player {
+  margin: 24px;
+}
+
+.delete-element {
+  position: absolute;
+  cursor: pointer;
+  right: 16px;
+  top: 16px;
+}
