@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { FaWindowClose } from "react-icons/fa";
 import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
-import './Players.css';
+import './Clubs.css';
 
 export type ClubLinks = {
     self: { href: string },
@@ -65,28 +64,38 @@ function Clubs() {
         }).catch((err) => console.log(err));
     }
 
-    return <div className="App">
-        <header className="App-header">
+    return (
+        <>
             <h1>Clubs</h1>
-            {clubs?.map(({ id, href, clubName }) => (
-                <div className="player-container" key={id}>
-                    <div className="player">
-                        <div>Category: {clubName}</div>
-                        <div className="delete-element" onClick={() => removeClub(href)}>
-                            <FaWindowClose />
+            {
+                clubs.map(({ id, href, clubName }) => (
+                    <div className="club-container" key={id}>
+                        <div className="club">
+                            <div className="club-details">
+                                <div>Name: {clubName}</div>
+                            </div>
+                            <div className='player-actions'>
+                                <Button
+                                    color="#f5bc42"
+                                    height="30px"
+                                    onClick={() => removeClub(href)}
+                                    width="200px"
+                                    cursor="pointer"
+                                > Delete </Button>
+                                <Button
+                                    color="#f5bc42"
+                                    height="30px"
+                                    onClick={() => routeChange(id, href)}
+                                    width="200px"
+                                    cursor="pointer"
+                                > Details </Button>
+                            </div>
                         </div>
-                        <Button
-                            color="#f5bc42"
-                            height="30px"
-                            onClick={() => routeChange(id, href)}
-                            width="200px"
-                            cursor="pointer"
-                        > Choose </Button>
                     </div>
-                </div>
-            ))}
-        </header>
-    </div>
+                ))
+            }
+        </>
+    )
 }
 
 export default Clubs

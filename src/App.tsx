@@ -9,13 +9,17 @@ import Clubs from './components/Clubs';
 function App() {
   return (
     <>
-      <SideBar />
-      <Routes>
-        <Route path="/" element={<Players />} />
-        <Route path="/players/:id" element={<PlayerInfo />} />
-        <Route path="/accounts" element={<Accounts />} />
-        <Route path="/clubs" element={<Clubs />} />
-      </Routes>
+      <div className="App">
+        <header className="App-header">
+          <SideBar />
+          <Routes>
+            <Route path="/" element={<Players />} />
+            <Route path="/players/:id" element={<PlayerInfo />} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/clubs" element={<Clubs />} />
+          </Routes>
+        </header>
+      </div >
     </>
   );
 }

@@ -1,4 +1,4 @@
-.player-container {
+.account-container {
   position: relative;
   border: 2px solid rgb(204, 201, 201);
   border-radius: 1rem;
@@ -7,16 +7,16 @@
   font-size: 24px;
 }
 
-.player,
-.player-actions {
+.account,
+.account-actions {
   display: flex;
 }
 
-.player-actions {
+.account-actions {
   flex-direction: column;
 }
 
-.player {
+.account {
   margin: 24px;
 }
 

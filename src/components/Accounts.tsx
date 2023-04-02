@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { FaWindowClose } from "react-icons/fa";
 import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
-import './Players.css';
+import './Accounts.css';
 
 export type AccountLinks = {
     self: { href: string },
@@ -63,28 +62,37 @@ function Accounts() {
         }).catch((err) => console.log(err));
     }
 
-    return <div className="App">
-        <header className="App-header">
+    return (
+        <>
             <h1>Accounts</h1>
             {accounts?.map(({ accountId, href, accountName }) => (
-                <div className="player-container" key={accountId}>
-                    <div className="player">
-                        <div>Category: {accountName}</div>
-                        <div className="delete-element" onClick={() => removeAccount(href)}>
-                            <FaWindowClose />
+                <div className="account-container" key={accountId}>
+                    <div className="account">
+                        <div className="account-details">
+                            <div>Name: {accountName}</div>
                         </div>
-                        <Button
-                            color="#f5bc42"
-                            height="30px"
-                            onClick={() => routeChange(accountId, href)}
-                            width="200px"
-                            cursor="pointer"
-                        > Choose </Button>
+                        <div className="account-actions">
+                            <Button
+                                color="#f5bc42"
+                                height="30px"
+                                onClick={() => removeAccount(href)}
+                                width="200px"
+                                cursor="pointer"
+                            > Delete </Button>
+                            <Button
+                                color="#f5bc42"
+                                height="30px"
+                                onClick={() => routeChange(accountId, href)}
+                                width="200px"
+                                cursor="pointer"
+                            > Details </Button>
+                        </div>
                     </div>
                 </div>
             ))}
-        </header>
-    </div>
+        </>
+    )
+
 }
 
 export default Accounts
