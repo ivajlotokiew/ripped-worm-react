@@ -65,7 +65,7 @@ function Players() {
         }).catch((err) => console.log(err));
     }
 
-    const openModal = () => {
+    const toggleModal = () => {
         setIsOpen(prev => !prev);
     }
 
@@ -94,7 +94,7 @@ function Players() {
                 <Button
                     color="#f5bc42"
                     height="30px"
-                    onClick={() => openModal()}
+                    onClick={() => toggleModal()}
                     width="200px"
                     radius='0.5rem'
                     cursor="pointer"
@@ -125,13 +125,13 @@ function Players() {
                                     radius='0.5rem'
                                     cursor="pointer"
                                 > Delete </Button>
-                            </div>``
+                            </div>
                         </div>
                     </div>
                 ))
             }
 
-            {isOpen && <ItemsModal isOpen={isOpen} opModal={openModal} />}
+            {isOpen && <ItemsModal isOpen={isOpen} toggleModal={toggleModal} />}
         </>
     )
 

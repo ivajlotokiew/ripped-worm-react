@@ -12,7 +12,7 @@ const customStyles = {
     },
 };
 
-export default function ItemsModal(props: { isOpen: boolean, opModal: () => void }) {
+export default function ItemsModal(props: { isOpen: boolean, toggleModal: () => void }) {
     let subtitle: HTMLHeadingElement | null;
     const [modalIsOpen, setIsOpen] = useState(props.isOpen);
     debugger;
@@ -28,7 +28,7 @@ export default function ItemsModal(props: { isOpen: boolean, opModal: () => void
 
     function closeModal() {
         setIsOpen(false);
-        props.opModal();
+        props.toggleModal();
     }
 
     return (
