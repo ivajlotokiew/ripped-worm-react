@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
-import './Clubs.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
@@ -83,7 +82,17 @@ function Clubs() {
 
     return (
         <>
-            <h1>Clubs</h1>
+            <div className='item-header'>
+                <h1>Clubs list</h1>
+                <Button
+                    color="#f5bc42"
+                    height="30px"
+                    onClick={() => submit('test')}
+                    width="200px"
+                    radius='0.5rem'
+                    cursor="pointer"
+                > Add New Club </Button>
+            </div>
             {
                 clubs.map(({ id, href, clubName }) => (
                     <div className="item-container" key={id}>

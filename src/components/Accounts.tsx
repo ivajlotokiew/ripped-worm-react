@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
-import './Accounts.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
@@ -82,7 +81,17 @@ function Accounts() {
 
     return (
         <>
-            <h1>Accounts</h1>
+            <div className='item-header'>
+                <h1>Accounts list</h1>
+                <Button
+                    color="#f5bc42"
+                    height="30px"
+                    onClick={() => submit('test')}
+                    width="200px"
+                    radius='0.5rem'
+                    cursor="pointer"
+                > Add New Account </Button>
+            </div>
             {accounts?.map(({ accountId, href, accountName }) => (
                 <div className="item-container" key={accountId}>
                     <div className="item">
