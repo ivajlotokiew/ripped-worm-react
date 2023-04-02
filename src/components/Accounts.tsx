@@ -64,6 +64,7 @@ function Accounts() {
 
     return <div className="App">
         <header className="App-header">
+            <h1>Accounts</h1>
             {accounts?.map(({ accountId, url, accountName }) => (
                 <div className="player-container" key={accountId}>
                     <div className="player">

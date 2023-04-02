@@ -1,0 +1,22 @@
+.sidebar-wrapper {
+  display: flex;
+  position: fixed;
+  top: 50px;
+  left: 50px;
+  flex-direction: column;
+  border: 5px solid rgb(245, 188, 66);
+  background: gainsboro;
+  border-radius: 1rem;
+  padding: 20px;
+  width: 10rem;
+}
+
+.sidebar-wrapper a:hover {
+  text-decoration: underline;
+}
+
+a:-webkit-any-link {
+  color: -webkit-link;
+  cursor: pointer;
+  text-decoration: unset;
+}

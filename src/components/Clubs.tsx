@@ -64,6 +64,7 @@ function Clubs() {
 
     return <div className="App">
         <header className="App-header">
+            <h1>Clubs</h1>
             {clubs?.map(({ id, url, clubName }) => (
                 <div className="player-container" key={id}>
                     <div className="player">

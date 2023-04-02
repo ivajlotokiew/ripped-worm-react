@@ -57,20 +57,22 @@ function Players() {
         navigate(`/players/${id}`, { state: { id, url } });
     }
 
-    const removeElement = (id: string) => {
-        // const newPlayer = players?.filter((_, i) => i !== id);
-        // if (newPlayer !== undefined)
-        //     setPlayers(newPlayer);
+    const removePlayer = async (id: string, url: string) => {
+        await fetch(url + '/' + id, { method: 'DELETE' }).then(() => {
+            const currentPlayers = players.filter(player => player.id !== id);
+            setPlayers(currentPlayers);
+        }).catch((err) => console.log(err));
     }
 
     return <div className="App">
         <header className="App-header">
+            <h1>Players</h1>
             {players?.map(({ id, url, playerName, playerType }) => (
                 <div className="player-container" key={id}>
                     <div className="player">
                         <div>Category: {playerName}</div>
                         <div>Difficulty: {playerType}</div>
-                        <div className="delete-element" onClick={() => removeElement(id)}>
+                        <div className="delete-element" onClick={() => removePlayer(id, url)}>
                             <FaWindowClose />
                         </div>
                         <Button
