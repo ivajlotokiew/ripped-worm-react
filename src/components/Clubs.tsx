@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
 import './Clubs.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export type ClubLinks = {
     self: { href: string },
@@ -63,6 +65,22 @@ function Clubs() {
         }).catch((err) => console.log(err));
     }
 
+    const submit = (href: string) => {
+        confirmAlert({
+            title: 'Confirm to submit',
+            message: 'Are you sure that you want to delete this club?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeClub(href)
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        });
+    }
+
     return (
         <>
             <h1>Clubs</h1>
@@ -85,7 +103,7 @@ function Clubs() {
                                 <Button
                                     color="#f5bc42"
                                     height="30px"
-                                    onClick={() => removeClub(href)}
+                                    onClick={() => submit(href)}
                                     width="200px"
                                     cursor="pointer"
                                     radius='0.5rem'

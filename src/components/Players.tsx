@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
 import './Players.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export type PlayerLinks = {
     self: { href: string },
@@ -63,6 +65,24 @@ function Players() {
         }).catch((err) => console.log(err));
     }
 
+    const submit = (href: string) => {
+        confirmAlert({
+            title: 'Confirm to submit',
+            message: 'Are you sure that you want to delete this player?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removePlayer(href)
+                },
+                {
+                    label: 'No',
+                }
+            ],
+            //TODO I added a custom class so I can play with the styles of the pop-up window
+            overlayClassName: "delete-player-alert"
+        });
+    }
+
     return (
         <>
             <h1>Players</h1>
@@ -86,7 +106,7 @@ function Players() {
                                 <Button
                                     color="#f5bc42"
                                     height="30px"
-                                    onClick={() => removePlayer(href)}
+                                    onClick={() => submit(href)}
                                     width="200px"
                                     radius='0.5rem'
                                     cursor="pointer"

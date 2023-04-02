@@ -33,12 +33,20 @@
   margin: 24px;
 }
 
+.item-details {
+  text-align: left;
+}
+
 .item-actions {
   flex-direction: column;
 }
 
 .item-actions > button {
   margin-bottom: 2px;
+}
+
+.item-actions button:hover {
+  background-color: rgb(240, 170, 21) !important;
 }
 
 .delete-element {
