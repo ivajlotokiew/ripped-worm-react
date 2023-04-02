@@ -41,7 +41,7 @@
 
 .item {
   justify-content: space-between;
-  margin: 24px;
+  margin: 14px;
 }
 
 .item-details {
@@ -58,7 +58,7 @@ button {
 }
 
 .item-actions > button {
-  margin-bottom: 2px;
+  margin-bottom: 10px;
 }
 
 .item-actions button:hover,
