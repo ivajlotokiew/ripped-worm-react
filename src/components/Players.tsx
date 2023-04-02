@@ -3,21 +3,7 @@ import Button from './CustomButtonComponent';
 import { useNavigate } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import Modal from 'react-modal';
-
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-    },
-};
-
-// Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
-Modal.setAppElement('#root');
+import ItemsModal from './ItemsModal';
 
 export type PlayerLinks = {
     self: { href: string },
@@ -35,23 +21,9 @@ export type Player = {
 }
 
 function Players() {
-    let subtitle: HTMLHeadingElement | null;
-    const [modalIsOpen, setIsOpen] = useState(false);
     const [players, setPlayers] = useState<Player[] | []>([]);
     const [isSubscribed, setIsSubscribed] = useState(true);
-
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        if (subtitle) subtitle.style.color = '#f00';
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
         // declare the async data fetching function
@@ -81,8 +53,7 @@ function Players() {
         return () => setIsSubscribed(prev => !prev);
     }, [])
 
-    let navigate = useNavigate();
-
+    const navigate = useNavigate();
     const routeChange = (id: string, href: string) => {
         navigate(`/players/${id}`, { state: { href } });
     }
@@ -92,6 +63,10 @@ function Players() {
             const currentPlayers = players.filter(player => player.href !== href);
             setPlayers(currentPlayers);
         }).catch((err) => console.log(err));
+    }
+
+    const openModal = () => {
+        setIsOpen(prev => !prev);
     }
 
     const submit = (href: string) => {
@@ -119,7 +94,7 @@ function Players() {
                 <Button
                     color="#f5bc42"
                     height="30px"
-                    onClick={() => submit('test')}
+                    onClick={() => openModal()}
                     width="200px"
                     radius='0.5rem'
                     cursor="pointer"
@@ -150,32 +125,13 @@ function Players() {
                                     radius='0.5rem'
                                     cursor="pointer"
                                 > Delete </Button>
-                            </div>
+                            </div>``
                         </div>
                     </div>
                 ))
             }
-            <div>
-                <button onClick={openModal}>Open Modal</button>
-                <Modal
-                    isOpen={modalIsOpen}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal"
-                >
-                    <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
-                    <button onClick={closeModal}>close</button>
-                    <div>I am a modal</div>
-                    <form>
-                        <input />
-                        <button>tab navigation</button>
-                        <button>stays</button>
-                        <button>inside</button>
-                        <button>the modal</button>
-                    </form>
-                </Modal>
-            </div>
+
+            {isOpen && <ItemsModal isOpen={isOpen} opModal={openModal} />}
         </>
     )
 
