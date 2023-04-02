@@ -28,13 +28,17 @@
   display: flex;
 }
 
+.item {
+  justify-content: space-between;
+  margin: 24px;
+}
+
 .item-actions {
   flex-direction: column;
 }
 
-.item {
-  justify-content: space-between;
-  margin: 24px;
+.item-actions > button {
+  margin-bottom: 2px;
 }
 
 .delete-element {

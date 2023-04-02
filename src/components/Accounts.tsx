@@ -75,17 +75,19 @@ function Accounts() {
                             <Button
                                 color="#f5bc42"
                                 height="30px"
-                                onClick={() => removeAccount(href)}
+                                onClick={() => routeChange(accountId, href)}
                                 width="200px"
+                                radius='0.5rem'
                                 cursor="pointer"
-                            > Delete </Button>
+                            > Details </Button>
                             <Button
                                 color="#f5bc42"
                                 height="30px"
-                                onClick={() => routeChange(accountId, href)}
+                                onClick={() => removeAccount(href)}
                                 width="200px"
                                 cursor="pointer"
-                            > Details </Button>
+                                radius='0.5rem'
+                            > Delete </Button>
                         </div>
                     </div>
                 </div>

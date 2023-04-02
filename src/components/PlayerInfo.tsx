@@ -7,9 +7,7 @@ function PlayerInfo() {
     const { href } = location.state;
     const [player, setPlayer] = useState<Player | null>(null);
 
-
     useEffect(() => {
-        debugger;
         // declare the async data fetching function
         const fetchData = async () => {
             // get the data from the api

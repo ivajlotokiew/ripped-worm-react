@@ -57,7 +57,6 @@ function Clubs() {
     }
 
     const removeClub = async (href: string) => {
-        debugger;
         await fetch(href, { method: 'DELETE' }).then(() => {
             const curClubs = clubs.filter(club => club.href !== href);
             setClubs(curClubs);
@@ -78,17 +77,19 @@ function Clubs() {
                                 <Button
                                     color="#f5bc42"
                                     height="30px"
-                                    onClick={() => removeClub(href)}
-                                    width="200px"
-                                    cursor="pointer"
-                                > Delete </Button>
-                                <Button
-                                    color="#f5bc42"
-                                    height="30px"
                                     onClick={() => routeChange(id, href)}
                                     width="200px"
                                     cursor="pointer"
+                                    radius='0.5rem'
                                 > Details </Button>
+                                <Button
+                                    color="#f5bc42"
+                                    height="30px"
+                                    onClick={() => removeClub(href)}
+                                    width="200px"
+                                    cursor="pointer"
+                                    radius='0.5rem'
+                                > Delete </Button>
                             </div>
                         </div>
                     </div>

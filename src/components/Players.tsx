@@ -78,17 +78,19 @@ function Players() {
                                 <Button
                                     color="#f5bc42"
                                     height="30px"
-                                    onClick={() => removePlayer(href)}
+                                    onClick={() => routeChange(id, href)}
                                     width="200px"
+                                    radius='0.5rem'
                                     cursor="pointer"
-                                > Delete </Button>
+                                > Details </Button>
                                 <Button
                                     color="#f5bc42"
                                     height="30px"
-                                    onClick={() => routeChange(id, href)}
+                                    onClick={() => removePlayer(href)}
                                     width="200px"
+                                    radius='0.5rem'
                                     cursor="pointer"
-                                > Details </Button>
+                                > Delete </Button>
                             </div>
                         </div>
                     </div>
