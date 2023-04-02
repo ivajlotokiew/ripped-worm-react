@@ -12,3 +12,34 @@
   color: white;
   width: inherit;
 }
+
+.item-container {
+  position: relative;
+  background: gray;
+  border: 2px solid rgb(204, 201, 201);
+  border-radius: 1rem;
+  margin: 0.5rem;
+  font-size: 24px;
+  width: 50%;
+}
+
+.item,
+.item-actions {
+  display: flex;
+}
+
+.item-actions {
+  flex-direction: column;
+}
+
+.item {
+  justify-content: space-between;
+  margin: 24px;
+}
+
+.delete-element {
+  position: absolute;
+  cursor: pointer;
+  right: 16px;
+  top: 16px;
+}

@@ -68,13 +68,13 @@ function Players() {
             <h1>Players</h1>
             {
                 players?.map(({ id, href, playerName, playerType }) => (
-                    <div className="player-container" key={id}>
-                        <div className="player">
-                            <div className='player-details'>
+                    <div className="item-container" key={id}>
+                        <div className="item">
+                            <div className='item-details'>
                                 <div>Name: {playerName}</div>
                                 <div>Type: {playerType}</div>
                             </div>
-                            <div className='player-actions'>
+                            <div className='item-actions'>
                                 <Button
                                     color="#f5bc42"
                                     height="30px"

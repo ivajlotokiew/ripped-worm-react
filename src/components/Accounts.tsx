@@ -66,12 +66,12 @@ function Accounts() {
         <>
             <h1>Accounts</h1>
             {accounts?.map(({ accountId, href, accountName }) => (
-                <div className="account-container" key={accountId}>
-                    <div className="account">
-                        <div className="account-details">
+                <div className="item-container" key={accountId}>
+                    <div className="item">
+                        <div className="item-details">
                             <div>Name: {accountName}</div>
                         </div>
-                        <div className="account-actions">
+                        <div className="item-actions">
                             <Button
                                 color="#f5bc42"
                                 height="30px"

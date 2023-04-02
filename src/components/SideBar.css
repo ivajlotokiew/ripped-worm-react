@@ -1,13 +1,13 @@
 .sidebar-wrapper {
   display: flex;
   position: fixed;
-  top: 100px;
+  top: 102px;
   left: 50px;
   flex-direction: column;
   border: 5px solid rgb(245, 188, 66);
   background: gainsboro;
   border-radius: 1rem;
-  padding: 20px;
+  padding: 40px;
   text-align: left;
 }
 

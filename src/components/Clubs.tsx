@@ -69,12 +69,12 @@ function Clubs() {
             <h1>Clubs</h1>
             {
                 clubs.map(({ id, href, clubName }) => (
-                    <div className="club-container" key={id}>
-                        <div className="club">
-                            <div className="club-details">
+                    <div className="item-container" key={id}>
+                        <div className="item">
+                            <div className="item-details">
                                 <div>Name: {clubName}</div>
                             </div>
-                            <div className='player-actions'>
+                            <div className="item-actions">
                                 <Button
                                     color="#f5bc42"
                                     height="30px"
