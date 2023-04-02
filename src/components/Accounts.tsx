@@ -14,7 +14,6 @@ export type AccountLinks = {
 export type Account = {
     accountId: string,
     accountName: string,
-    url: string,
     href: string,
     _links: AccountLinks,
 }
@@ -34,8 +33,9 @@ function Accounts() {
             // set state with the result if `isSubscribed` is true
             if (isSubscribed) {
                 const accounts = json._embedded.accounts.map((account: { _links: { account: { href: string; }; }; }) => {
-                    const attrs = account._links.account.href.split('accounts/');
-                    return { ...account, id: attrs[1], url: attrs[0] + 'accounts' };
+                    const accHref = account._links.account.href;
+                    const attrs = accHref.split('accounts/');
+                    return { ...account, id: attrs[1], href: accHref };
                 });
 
                 setAccounts(accounts);
@@ -52,30 +52,31 @@ function Accounts() {
 
     let navigate = useNavigate();
 
-    const routeChange = (id: string, url: string) => {
-        navigate(`/players/${id}`, { state: { id, url } });
+    const routeChange = (id: string, href: string) => {
+        navigate(`/players/${id}`, { state: { href } });
     }
 
-    const removeElement = (id: string) => {
-        // const newPlayer = players?.filter((_, i) => i !== id);
-        // if (newPlayer !== undefined)
-        //     setPlayers(newPlayer);
+    const removeAccount = async (href: string) => {
+        await fetch(href, { method: 'DELETE' }).then(() => {
+            const curAccounts = accounts.filter(acc => acc.href !== href);
+            setAccounts(curAccounts);
+        }).catch((err) => console.log(err));
     }
 
     return <div className="App">
         <header className="App-header">
             <h1>Accounts</h1>
-            {accounts?.map(({ accountId, url, accountName }) => (
+            {accounts?.map(({ accountId, href, accountName }) => (
                 <div className="player-container" key={accountId}>
                     <div className="player">
                         <div>Category: {accountName}</div>
-                        <div className="delete-element" onClick={() => removeElement(accountId)}>
+                        <div className="delete-element" onClick={() => removeAccount(href)}>
                             <FaWindowClose />
                         </div>
                         <Button
                             color="#f5bc42"
                             height="30px"
-                            onClick={() => routeChange(accountId, url)}
+                            onClick={() => routeChange(accountId, href)}
                             width="200px"
                             cursor="pointer"
                         > Choose </Button>

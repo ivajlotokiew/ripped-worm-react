@@ -34,8 +34,9 @@ function Clubs() {
             // set state with the result if `isSubscribed` is true
             if (isSubscribed) {
                 const clubs = json._embedded.clubs.map((club: { _links: { club: { href: string; }; }; }) => {
-                    const attrs = club._links.club.href.split('clubs/');
-                    return { ...club, id: attrs[1], url: attrs[0] + 'clubs' };
+                    const clubHref = club._links.club.href;
+                    const attrs = clubHref.split('clubs/');
+                    return { ...club, id: attrs[1], href: clubHref };
                 });
 
                 setClubs(clubs);
@@ -52,30 +53,32 @@ function Clubs() {
 
     let navigate = useNavigate();
 
-    const routeChange = (id: string, url: string) => {
-        navigate(`/players/${id}`, { state: { id, url } });
+    const routeChange = (id: string, href: string) => {
+        navigate(`/players/${id}`, { state: { href } });
     }
 
-    const removeElement = (id: string) => {
-        // const newPlayer = players?.filter((_, i) => i !== id);
-        // if (newPlayer !== undefined)
-        //     setPlayers(newPlayer);
+    const removeClub = async (href: string) => {
+        debugger;
+        await fetch(href, { method: 'DELETE' }).then(() => {
+            const curClubs = clubs.filter(club => club.href !== href);
+            setClubs(curClubs);
+        }).catch((err) => console.log(err));
     }
 
     return <div className="App">
         <header className="App-header">
             <h1>Clubs</h1>
-            {clubs?.map(({ id, url, clubName }) => (
+            {clubs?.map(({ id, href, clubName }) => (
                 <div className="player-container" key={id}>
                     <div className="player">
                         <div>Category: {clubName}</div>
-                        <div className="delete-element" onClick={() => removeElement(id)}>
+                        <div className="delete-element" onClick={() => removeClub(href)}>
                             <FaWindowClose />
                         </div>
                         <Button
                             color="#f5bc42"
                             height="30px"
-                            onClick={() => routeChange(id, url)}
+                            onClick={() => routeChange(id, href)}
                             width="200px"
                             cursor="pointer"
                         > Choose </Button>

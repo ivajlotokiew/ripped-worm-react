@@ -13,7 +13,6 @@ export type PlayerLinks = {
 
 export type Player = {
     id: string,
-    url: string,
     playerName: string,
     playerType: string,
     href: string,
@@ -35,8 +34,9 @@ function Players() {
             // set state with the result if `isSubscribed` is true
             if (isSubscribed) {
                 const players = json._embedded.players.map((player: { _links: { player: { href: string; }; }; }) => {
-                    const attrs = player._links.player.href.split('players/');
-                    return { ...player, id: attrs[1], url: attrs[0] + 'players' };
+                    const playerHref = player._links.player.href;
+                    const attrs = playerHref.split('players/');
+                    return { ...player, id: attrs[1], href: playerHref };
                 });
 
                 setPlayers(players);
@@ -53,13 +53,13 @@ function Players() {
 
     let navigate = useNavigate();
 
-    const routeChange = (id: string, url: string) => {
-        navigate(`/players/${id}`, { state: { id, url } });
+    const routeChange = (id: string, href: string) => {
+        navigate(`/players/${id}`, { state: { href } });
     }
 
-    const removePlayer = async (id: string, url: string) => {
-        await fetch(url + '/' + id, { method: 'DELETE' }).then(() => {
-            const currentPlayers = players.filter(player => player.id !== id);
+    const removePlayer = async (href: string) => {
+        await fetch(href, { method: 'DELETE' }).then(() => {
+            const currentPlayers = players.filter(player => player.href !== href);
             setPlayers(currentPlayers);
         }).catch((err) => console.log(err));
     }
@@ -67,18 +67,18 @@ function Players() {
     return <div className="App">
         <header className="App-header">
             <h1>Players</h1>
-            {players?.map(({ id, url, playerName, playerType }) => (
+            {players?.map(({ id, href, playerName, playerType }) => (
                 <div className="player-container" key={id}>
                     <div className="player">
                         <div>Category: {playerName}</div>
                         <div>Difficulty: {playerType}</div>
-                        <div className="delete-element" onClick={() => removePlayer(id, url)}>
+                        <div className="delete-element" onClick={() => removePlayer(href)}>
                             <FaWindowClose />
                         </div>
                         <Button
                             color="#f5bc42"
                             height="30px"
-                            onClick={() => routeChange(id, url)}
+                            onClick={() => routeChange(id, href)}
                             width="200px"
                             cursor="pointer"
                         > Choose </Button>

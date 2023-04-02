@@ -4,7 +4,7 @@ import { Player } from './Players';
 
 function PlayerInfo() {
     const location = useLocation();
-    const { id, url } = location.state;
+    const { href } = location.state;
     const [player, setPlayer] = useState<Player | null>(null);
 
 
@@ -13,7 +13,7 @@ function PlayerInfo() {
         // declare the async data fetching function
         const fetchData = async () => {
             // get the data from the api
-            const data = await fetch(url + '/' + id);
+            const data = await fetch(href);
             // convert the data to json
             const json = await data.json();
             setPlayer(json);
