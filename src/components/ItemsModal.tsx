@@ -14,11 +14,14 @@ const customStyles = {
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
         width: '40%',
-        background: '#efefef',
+        background: '#282c34',
+        color: 'white',
+        border: '5px solid rgb(245, 188, 66)',
+        borderRadius: '1rem',
     },
 };
 
-export default function ItemsModal(props: { isOpen: boolean, openModal: () => void }) {
+export default function ItemsModal(props: { isOpen: boolean, openModal: () => void, fetchData: () => Promise<void> }) {
     let subtitle: HTMLHeadingElement | null;
     const [modalIsOpen, setIsOpen] = useState(props.isOpen);
     const [name, setName] = useState<string>('');
@@ -30,7 +33,7 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
 
     function afterOpenModal() {
         // references are now sync'd and can be accessed.
-        if (subtitle) subtitle.style.color = '#f00';
+        if (subtitle) subtitle.style.color = '#ffffff';
     }
 
     function closeModal() {
@@ -43,12 +46,22 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
     };
 
     const handleSelectChange = (event: FormEvent<HTMLSelectElement>) => {
-        let safeSearchTypeValue: PlayerType = event.currentTarget.value as PlayerType;
+        let safeSearchTypeValue: PlayerType = PlayerType[event.currentTarget.value as keyof typeof PlayerType];
         setType(safeSearchTypeValue);
     };
 
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
+    const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerName: name, playerType: type })
+        };
+        const url = 'http://localhost:8080/api/players';
+        await fetch(url, requestOptions).then(() => {
+            props.fetchData();
+            closeModal();
+        }).catch((err) => console.log(err));
     }
 
     return (
@@ -67,10 +80,9 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
                         <Form.Control type="text" placeholder="Enter your name" value={name} onChange={handleInputChange} />
                     </Form.Group>
                     <Form.Label>Player type:</Form.Label>
-                    <Form.Select aria-label="Default select example" value={type} onChange={handleSelectChange} >
-                        <option>Choose a player type</option>
+                    <Form.Select aria-label="Player type" value={type} onChange={handleSelectChange} >
                         {Object.values(PlayerType).map(value => (
-                            <option value={value}>{value}</option>
+                            <option value={value} key={value}>{value}</option>
                         ))}
                     </Form.Select>
                     <Stack className="mt-3 justify-content-end" direction='horizontal' gap={3}>

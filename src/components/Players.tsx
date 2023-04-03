@@ -6,9 +6,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import ItemsModal from './ItemsModal';
 
 export enum PlayerType {
-    Depost = 'DEPOSIT',
-    Credit = 'CREDIT',
-    Stake = 'STAKE',
+    DEPOSIT = 'DEPOSIT',
+    CREDIT = 'CREDIT',
+    STAKE = 'STAKE',
 }
 
 export type PlayerLinks = {
@@ -28,36 +28,32 @@ export type Player = {
 
 function Players() {
     const [players, setPlayers] = useState<Player[] | []>([]);
-    const [isSubscribed, setIsSubscribed] = useState(true);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
-        // declare the async data fetching function
-        const fetchData = async () => {
-            // get the data from the api
-            const data = await fetch('http://localhost:8080/api/players');
-            // convert the data to json
-            const json = await data.json();
-
-            // set state with the result if `isSubscribed` is true
-            if (isSubscribed) {
-                const players = json._embedded.players.map((player: { _links: { player: { href: string; }; }; }) => {
-                    const playerHref = player._links.player.href;
-                    const attrs = playerHref.split('players/');
-                    return { ...player, id: attrs[1], href: playerHref };
-                });
-
-                setPlayers(players);
-            }
-        }
-
         // call the function
         fetchData()
             // make sure to catch any error
             .catch(console.error);
-        // cancel any future `setData`
-        return () => setIsSubscribed(prev => !prev);
     }, [])
+
+    // declare the async data fetching function
+    const fetchData = async () => {
+        debugger;
+        // get the data from the api
+        const data = await fetch('http://localhost:8080/api/players');
+        // convert the data to json
+        const json = await data.json();
+
+        // set state with the result if `isSubscribed` is true
+        const players = json._embedded.players.map((player: { _links: { player: { href: string; }; }; }) => {
+            const playerHref = player._links.player.href;
+            const attrs = playerHref.split('players/');
+            return { ...player, id: attrs[1], href: playerHref };
+        });
+
+        setPlayers(players);
+    }
 
     const navigate = useNavigate();
     const routeChange = (id: string, href: string) => {
@@ -137,7 +133,7 @@ function Players() {
                 ))
             }
 
-            {isOpen && <ItemsModal isOpen={isOpen} openModal={openModal} />}
+            {isOpen && <ItemsModal isOpen={isOpen} openModal={openModal} fetchData={fetchData} />}
         </>
     )
 
