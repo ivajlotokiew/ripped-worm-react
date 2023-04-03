@@ -5,6 +5,12 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import ItemsModal from './ItemsModal';
 
+export enum PlayerType {
+    Depost = 'DEPOSIT',
+    Credit = 'CREDIT',
+    Stake = 'STAKE',
+}
+
 export type PlayerLinks = {
     self: { href: string },
     player: { href: string },
@@ -15,7 +21,7 @@ export type PlayerLinks = {
 export type Player = {
     id: string,
     playerName: string,
-    playerType: string,
+    playerType: PlayerType,
     href: string,
     _links: PlayerLinks,
 }
@@ -65,7 +71,7 @@ function Players() {
         }).catch((err) => console.log(err));
     }
 
-    const toggleModal = () => {
+    const openModal = () => {
         setIsOpen(prev => !prev);
     }
 
@@ -94,7 +100,7 @@ function Players() {
                 <Button
                     color="#f5bc42"
                     height="30px"
-                    onClick={() => toggleModal()}
+                    onClick={() => openModal()}
                     width="200px"
                     radius='0.5rem'
                     cursor="pointer"
@@ -131,7 +137,7 @@ function Players() {
                 ))
             }
 
-            {isOpen && <ItemsModal isOpen={isOpen} toggleModal={toggleModal} />}
+            {isOpen && <ItemsModal isOpen={isOpen} openModal={openModal} />}
         </>
     )
 

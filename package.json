@@ -47,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.6",
     "@types/react-modal": "^3.13.1"
   }
 }
