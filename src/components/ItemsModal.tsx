@@ -2,6 +2,7 @@ import { ChangeEvent, useState, FormEvent } from 'react'
 import Modal from 'react-modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Stack from 'react-bootstrap/Stack';
 import { PlayerType } from './Players';
 
 const customStyles = {
@@ -48,8 +49,6 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
 
     const handleSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        console.log('Name: ', name);
-        console.log('Type: ', type);
     }
 
     return (
@@ -64,20 +63,25 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
                 <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Add new player</h2>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Player name</Form.Label>
+                        <Form.Label>Player name:</Form.Label>
                         <Form.Control type="text" placeholder="Enter your name" value={name} onChange={handleInputChange} />
                     </Form.Group>
+                    <Form.Label>Player type:</Form.Label>
                     <Form.Select aria-label="Default select example" value={type} onChange={handleSelectChange} >
                         <option>Choose a player type</option>
                         {Object.values(PlayerType).map(value => (
                             <option value={value}>{value}</option>
                         ))}
                     </Form.Select>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+                    <Stack className="mt-3 justify-content-end" direction='horizontal' gap={3}>
+                        <Button variant="primary" type="submit">
+                            Submit
+                        </Button>
+                        <Button variant="secondary" onClick={closeModal}>
+                            Close
+                        </Button>
+                    </Stack>
                 </Form>
-                <button onClick={closeModal}>close</button>
             </Modal>
         </div >
     )
