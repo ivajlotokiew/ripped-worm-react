@@ -121,7 +121,7 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
                         <Button variant="primary" type="submit">
                             Submit
                         </Button>
-                        <Button variant="secondary" onClick={closeModal}>
+                        <Button variant="danger" onClick={closeModal}>
                             Close
                         </Button>
                     </Stack>

@@ -4,6 +4,7 @@ import { Player } from './Players';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import './PlayerInfo.css'
 
 function PlayerInfo() {
@@ -48,30 +49,39 @@ function PlayerInfo() {
             </div>
             <Form onSubmit={handleSubmit} className='form-width'>
                 <Row className="mb-3">
-                    <Form.Group>
+                    <Form.Group as={Col} md="10">
                         <Form.Label>ID</Form.Label>
-                        <Form.Control type="text" placeholder="Id" value={player?.id} disabled />
+                        <Form.Control type="text" placeholder="Id" value={player?.id} disabled required />
                     </Form.Group>
-                    <Form.Group >
+                    <Form.Group as={Col} md="10">
                         <Form.Label>Player name</Form.Label>
-                        <Form.Control type="text" placeholder="Name" value={player?.playerName} required />
+                        <Form.Control type="text" className="col-sm-8" placeholder="Name" value={player?.playerName} required />
                     </Form.Group>
-                    <Form.Group >
+                    <Form.Group as={Col} md="2" style={{ display: "flex", alignItems: "center", margin: '0px' }}>
+                        <button type="button" className="btn btn-warning">Edit</button>
+                    </Form.Group>
+                    <Form.Group as={Col} md="10">
                         <Form.Label>Player type</Form.Label>
                         <Form.Control type="text" placeholder="Type" value={player?.playerType} />
                     </Form.Group>
-                    <Form.Group >
+                    <Form.Group as={Col} md="2" style={{ display: "flex", alignItems: "center", margin: '0px' }}>
+                        <button type="button" className="btn btn-warning">Edit</button>
+                    </Form.Group>
+                    <Form.Group as={Col} md="10">
                         <Form.Label>Credit amount</Form.Label>
                         <Form.Control type="text" placeholder="State" value={player?.creditAmount} />
                     </Form.Group>
-                    <Form.Group >
+                    <Form.Group as={Col} md="2" style={{ display: "flex", alignItems: "center", margin: '0px' }}>
+                        <button type="button" className="btn btn-warning">Edit</button>
+                    </Form.Group>
+                    <Form.Group as={Col} md="10">
                         <Form.Label>Date registration</Form.Label>
                         <Form.Control type="text" placeholder="Date" value={player?.dateRegistration} disabled />
                     </Form.Group>
                 </Row>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "right", margin: '0px' }}>
+                <Form.Group as={Col} md="10" style={{ display: "flex", alignItems: "center", justifyContent: "right", margin: '0px' }}>
                     <Button type="submit">Submit form</Button>
-                </div>
+                </Form.Group>
             </Form>
         </>
     )
