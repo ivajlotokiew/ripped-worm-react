@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { Player } from './Players';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -11,6 +11,7 @@ function PlayerInfo() {
     const location = useLocation();
     const { href } = location.state;
     const [player, setPlayer] = useState<Player | null>(null);
+    const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
 
     useEffect(() => {
         // declare the async data fetching function
@@ -38,6 +39,10 @@ function PlayerInfo() {
             .catch(console.error);
     }, []);
 
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        console.log('Event: ', event)
+    }
+
     const handleSubmit = () => {
         //Do smt
     }
@@ -55,24 +60,16 @@ function PlayerInfo() {
                     </Form.Group>
                     <Form.Group as={Col} md="10">
                         <Form.Label>Player name</Form.Label>
-                        <Form.Control type="text" className="col-sm-8" placeholder="Name" value={player?.playerName} required />
-                    </Form.Group>
-                    <Form.Group as={Col} md="2" style={{ display: "flex", alignItems: "center", margin: '0px' }}>
-                        <button type="button" className="btn btn-warning">Edit</button>
+                        <Form.Control type="text" className="col-sm-8" placeholder="Name"
+                            defaultValue={player?.playerName} disabled={fieldsDisabled} required onChange={handleInputChange} />
                     </Form.Group>
                     <Form.Group as={Col} md="10">
                         <Form.Label>Player type</Form.Label>
-                        <Form.Control type="text" placeholder="Type" value={player?.playerType} />
-                    </Form.Group>
-                    <Form.Group as={Col} md="2" style={{ display: "flex", alignItems: "center", margin: '0px' }}>
-                        <button type="button" className="btn btn-warning">Edit</button>
+                        <Form.Control type="text" placeholder="Type" value={player?.playerType} disabled={fieldsDisabled} />
                     </Form.Group>
                     <Form.Group as={Col} md="10">
                         <Form.Label>Credit amount</Form.Label>
-                        <Form.Control type="text" placeholder="State" value={player?.creditAmount} />
-                    </Form.Group>
-                    <Form.Group as={Col} md="2" style={{ display: "flex", alignItems: "center", margin: '0px' }}>
-                        <button type="button" className="btn btn-warning">Edit</button>
+                        <Form.Control type="text" placeholder="State" value={player?.creditAmount} disabled={fieldsDisabled} />
                     </Form.Group>
                     <Form.Group as={Col} md="10">
                         <Form.Label>Date registration</Form.Label>
@@ -80,6 +77,7 @@ function PlayerInfo() {
                     </Form.Group>
                 </Row>
                 <Form.Group as={Col} md="10" style={{ display: "flex", alignItems: "center", justifyContent: "right", margin: '0px' }}>
+                    <Button type="button" style={{ marginRight: '10px' }} className="btn btn-warning" onClick={() => setFieldsDisabled(!fieldsDisabled)}>Edit</Button>
                     <Button type="submit">Submit form</Button>
                 </Form.Group>
             </Form>
