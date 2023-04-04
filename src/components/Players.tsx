@@ -23,7 +23,7 @@ export type Player = {
     playerName: string,
     playerType: PlayerType,
     creditAmount: number,
-    dateRegistration: Date,
+    dateRegistration: string | number,
     href: string,
     _links: PlayerLinks,
 }

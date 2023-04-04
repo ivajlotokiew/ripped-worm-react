@@ -18,11 +18,16 @@ function PlayerInfo() {
             const data = await fetch(href);
             // convert the data to json
             const json = await data.json();
-            debugger;
             let player: Player = {} as Player;
-            player.id = json.id;
+            player._links = json._links;
             player.playerName = json.playerName;
             player.playerType = json.playerType;
+            player.creditAmount = json.creditAmount;
+            const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+            player.dateRegistration = new Date(json.registrationTimestamp).toLocaleDateString(undefined, options);
+            const playerHref = player._links.self.href;
+            const attrs = playerHref.split('players/');
+            player.id = attrs[1];
             setPlayer(player);
         }
 
@@ -45,7 +50,7 @@ function PlayerInfo() {
                 <Row className="mb-3">
                     <Form.Group>
                         <Form.Label>ID</Form.Label>
-                        <Form.Control type="text" placeholder="Id" value={player?.id} required />
+                        <Form.Control type="text" placeholder="Id" value={player?.id} disabled />
                     </Form.Group>
                     <Form.Group >
                         <Form.Label>Player name</Form.Label>
@@ -57,11 +62,11 @@ function PlayerInfo() {
                     </Form.Group>
                     <Form.Group >
                         <Form.Label>Credit amount</Form.Label>
-                        <Form.Control type="text" placeholder="State" />
+                        <Form.Control type="text" placeholder="State" value={player?.creditAmount} />
                     </Form.Group>
                     <Form.Group >
                         <Form.Label>Date registration</Form.Label>
-                        <Form.Control type="text" placeholder="Date" required />
+                        <Form.Control type="text" placeholder="Date" value={player?.dateRegistration} disabled />
                     </Form.Group>
                 </Row>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "right", margin: '0px' }}>
