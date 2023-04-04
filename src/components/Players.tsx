@@ -22,6 +22,8 @@ export type Player = {
     id: string,
     playerName: string,
     playerType: PlayerType,
+    creditAmount: number,
+    dateRegistration: Date,
     href: string,
     _links: PlayerLinks,
 }
@@ -39,7 +41,6 @@ function Players() {
 
     // declare the async data fetching function
     const fetchData = async () => {
-        debugger;
         // get the data from the api
         const data = await fetch('http://localhost:8080/api/players');
         // convert the data to json
