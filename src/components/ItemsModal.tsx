@@ -21,14 +21,39 @@ const customStyles = {
     },
 };
 
+type Employee = {
+    [key: string]: any;
+    name: string;
+};
+
 export default function ItemsModal(props: { isOpen: boolean, openModal: () => void, fetchData: () => Promise<void> }) {
     let subtitle: HTMLHeadingElement | null;
     const [modalIsOpen, setIsOpen] = useState(props.isOpen);
     const [name, setName] = useState<string>('');
     const [type, setType] = useState<PlayerType | undefined>();
+    const [fields, setFields] = useState<Employee>();
+    const [errors, setErrors] = useState<Employee>();
 
-    function openModal() {
-        setIsOpen(true);
+    const handleValidation = () => {
+        let inputs = { ...fields };
+        let errors: Employee = {} as Employee;
+        let formIsValid = true;
+
+        //Name
+        if (!inputs.name) {
+            formIsValid = false;
+            errors.name = "Cannot be empty";
+        }
+
+        if (typeof inputs["name"] !== "undefined") {
+            if (!inputs["name"].match(/^[a-zA-Z]+$/)) {
+                formIsValid = false;
+                errors["name"] = "Only letters";
+            }
+        }
+
+        setErrors({ ...errors });
+        return formIsValid;
     }
 
     function afterOpenModal() {
@@ -42,6 +67,9 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        let inputs = { ...fields };
+        inputs.name = event.target.value;
+        setFields(inputs as Employee);
         setName(event.target.value);
     };
 
@@ -52,16 +80,18 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ playerName: name, playerType: type })
-        };
-        const url = 'http://localhost:8080/api/players';
-        await fetch(url, requestOptions).then(() => {
-            props.fetchData();
-            closeModal();
-        }).catch((err) => console.log(err));
+        if (handleValidation()) {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerName: name, playerType: type })
+            };
+            const url = 'http://localhost:8080/api/players';
+            await fetch(url, requestOptions).then(() => {
+                props.fetchData();
+                closeModal();
+            }).catch((err) => console.log(err));
+        }
     }
 
     return (
@@ -75,12 +105,14 @@ export default function ItemsModal(props: { isOpen: boolean, openModal: () => vo
             >
                 <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Add new player</h2>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="form">
                         <Form.Label>Player name:</Form.Label>
                         <Form.Control type="text" placeholder="Enter your name" value={name} onChange={handleInputChange} />
+                        <span style={{ color: "red" }}>{errors?.name}</span>
                     </Form.Group>
                     <Form.Label>Player type:</Form.Label>
                     <Form.Select aria-label="Player type" value={type} onChange={handleSelectChange} >
+                        <option>Choose a player type</option>
                         {Object.values(PlayerType).map(value => (
                             <option value={value} key={value}>{value}</option>
                         ))}

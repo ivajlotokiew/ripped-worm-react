@@ -35,6 +35,9 @@
 
 .item-header {
   width: 100%;
+  position: static;
+  margin-top: 30px;
+  margin-bottom: 10px;
   align-items: center;
   justify-content: space-evenly;
 }
