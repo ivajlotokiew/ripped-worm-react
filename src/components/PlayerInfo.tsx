@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './PlayerInfo.css'
 
+
 function PlayerInfo() {
     const location = useLocation();
     const { href } = location.state;
@@ -56,8 +57,18 @@ function PlayerInfo() {
         setPlayer({ ...player as Player, creditAmount: parseInt(event.target.value) });
     }
 
-    const handleSubmit = () => {
-        //Do smt
+    const handleSubmit = async (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+        const requestOptions = {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: player?.id, playerName: player?.playerName, playerType: player?.playerType })
+        }
+        const url = 'http://localhost:8080/api/players/' + player?.id;
+        debugger;
+        await fetch(url, requestOptions).then(() => {
+            console.log("Success");
+        }).catch((err) => console.log(err));
     }
 
     return (
