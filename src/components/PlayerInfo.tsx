@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
-import { ChangeEvent, useEffect, useState } from 'react'
-import { Player } from './Players';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { Player, PlayerType } from './Players';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -10,37 +10,50 @@ import './PlayerInfo.css'
 function PlayerInfo() {
     const location = useLocation();
     const { href } = location.state;
-    const [player, setPlayer] = useState<Player | null>(null);
+    const [player, setPlayer] = useState<Player | undefined>();
     const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
 
     useEffect(() => {
-        // declare the async data fetching function
-        const fetchData = async () => {
-            // get the data from the api
-            const data = await fetch(href);
-            // convert the data to json
-            const json = await data.json();
-            let player: Player = {} as Player;
-            player._links = json._links;
-            player.playerName = json.playerName;
-            player.playerType = json.playerType;
-            player.creditAmount = json.creditAmount;
-            const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
-            player.dateRegistration = new Date(json.registrationTimestamp).toLocaleDateString(undefined, options);
-            const playerHref = player._links.self.href;
-            const attrs = playerHref.split('players/');
-            player.id = attrs[1];
-            setPlayer(player);
-        }
-
         // call the function
         fetchData()
             // make sure to catch any error
             .catch(console.error);
     }, []);
 
+    // declare the async data fetching function
+    const fetchData = async () => {
+        // get the data from the api
+        const data = await fetch(href);
+        // convert the data to json
+        const jsonData = await data.json();
+        mapToPlayer(jsonData);
+    }
+
+    const mapToPlayer = (data: any) => {
+        let player: Player = {} as Player;
+        player._links = data._links;
+        player.playerName = data.playerName;
+        player.playerType = data.playerType;
+        player.creditAmount = data.creditAmount;
+        const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+        player.dateRegistration = new Date(data.registrationTimestamp).toLocaleDateString(undefined, options);
+        const playerHref = player._links.self.href;
+        const attrs = playerHref.split('players/');
+        player.id = attrs[1];
+        setPlayer(player);
+    }
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log('Event: ', event)
+        setPlayer({ ...player as Player, playerName: event.target.value });
+    }
+
+    const handleSelectChange = (event: FormEvent<HTMLSelectElement>) => {
+        let safeSearchTypeValue: PlayerType = PlayerType[event.currentTarget.value as keyof typeof PlayerType];
+        setPlayer({ ...player as Player, playerType: safeSearchTypeValue });
+    }
+
+    const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPlayer({ ...player as Player, creditAmount: parseInt(event.target.value) });
     }
 
     const handleSubmit = () => {
@@ -56,27 +69,41 @@ function PlayerInfo() {
                 <Row className="mb-3">
                     <Form.Group as={Col} md="10">
                         <Form.Label>ID</Form.Label>
-                        <Form.Control type="text" placeholder="Id" value={player?.id} disabled required />
+                        <Form.Control type="text" placeholder="Id" value={player?.id} style={{ cursor: "not-allowed" }} disabled required />
                     </Form.Group>
+
                     <Form.Group as={Col} md="10">
                         <Form.Label>Player name</Form.Label>
                         <Form.Control type="text" className="col-sm-8" placeholder="Name"
-                            defaultValue={player?.playerName} disabled={fieldsDisabled} required onChange={handleInputChange} />
+                            value={player?.playerName} disabled={fieldsDisabled} style={fieldsDisabled ? { cursor: "not-allowed" } : {}}
+                            required onChange={handleInputChange} />
                     </Form.Group>
+
                     <Form.Group as={Col} md="10">
-                        <Form.Label>Player type</Form.Label>
-                        <Form.Control type="text" placeholder="Type" value={player?.playerType} disabled={fieldsDisabled} />
+                        <Form.Label>Player type:</Form.Label>
+                        <Form.Select aria-label="Player type" value={player?.playerType} style={fieldsDisabled ? { cursor: "not-allowed" } : {}}
+                            disabled={fieldsDisabled} onChange={handleSelectChange}>
+                            <option>Choose a player type</option>
+                            {Object.values(PlayerType).map(value => (
+                                <option value={value} key={value}>{value}</option>
+                            ))}
+                        </Form.Select>
                     </Form.Group>
+
                     <Form.Group as={Col} md="10">
                         <Form.Label>Credit amount</Form.Label>
-                        <Form.Control type="text" placeholder="State" value={player?.creditAmount} disabled={fieldsDisabled} />
+                        <Form.Control type="number" placeholder="State" value={player?.creditAmount} style={fieldsDisabled ? { cursor: "not-allowed" } : {}}
+                            disabled={fieldsDisabled} onChange={handleAmountChange} />
                     </Form.Group>
+
                     <Form.Group as={Col} md="10">
                         <Form.Label>Date registration</Form.Label>
-                        <Form.Control type="text" placeholder="Date" value={player?.dateRegistration} disabled />
+                        <Form.Control type="text" placeholder="Date" value={player?.dateRegistration} style={{ cursor: "not-allowed" }} disabled />
                     </Form.Group>
                 </Row>
+
                 <Form.Group as={Col} md="10" style={{ display: "flex", alignItems: "center", justifyContent: "right", margin: '0px' }}>
+                    <Button type="button" style={{ marginRight: '10px' }} className="btn btn-secondary" onClick={fetchData}>Reset</Button>
                     <Button type="button" style={{ marginRight: '10px' }} className="btn btn-warning" onClick={() => setFieldsDisabled(!fieldsDisabled)}>Edit</Button>
                     <Button type="submit">Submit form</Button>
                 </Form.Group>
