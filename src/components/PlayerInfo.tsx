@@ -12,7 +12,8 @@ import LoadingSpinner from './LoadingSpinner';
 function PlayerInfo() {
     const location = useLocation();
     const { href } = location.state;
-    const [player, setPlayer] = useState({ id: '', playerName: '', playerType: 'DEPOSIT', creditAmount: 0, dateRegistration: '' } as Player);
+    const [player, setPlayer] =
+        useState({ id: '', playerName: '', playerType: 'DEPOSIT', creditAmount: 0, dateRegistration: '' } as Player);
     const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
