@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import ItemsModal from './ItemsModal';
+import PlayerSearch from './PlayerSearch';
 
 export enum PlayerType {
     DEPOSIT = 'DEPOSIT',
@@ -72,6 +73,13 @@ function Players() {
         setIsOpen(prev => !prev);
     }
 
+    const findPlayer = (player: Player) => {
+        console.log('Before: ', players);
+        setPlayers([{ ...player }]);
+        console.log('Player: ', player);
+        console.log('After: ', players);
+    }
+
     const submit = (href: string) => {
         confirmAlert({
             title: 'Confirm to submit',
@@ -102,6 +110,7 @@ function Players() {
                     radius='0.5rem'
                     cursor="pointer"
                 > Add New Player </Button>
+                <PlayerSearch findPlayer={findPlayer} />
             </div>
             {
                 players?.map(({ id, href, playerName, playerType }) => (

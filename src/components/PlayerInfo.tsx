@@ -42,17 +42,12 @@ function PlayerInfo() {
 
     const mapToPlayer = (data: any) => {
         if (data) {
-            let player: Player = {} as Player;
-            player._links = data._links;
-            player.playerName = data.playerName;
-            player.playerType = data.playerType;
-            player.creditAmount = data.creditAmount;
             const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
-            player.dateRegistration = new Date(data.registrationTimestamp).toLocaleDateString(undefined, options);
-            const playerHref = player._links.self.href;
+            const dateRegistration = new Date(data.registrationTimestamp).toLocaleDateString(undefined, options);
+            const playerHref = data._links.self.href;
             const attrs = playerHref.split('players/');
             player.id = attrs[1];
-            setPlayer(player);
+            setPlayer({ ...data, id: player.id, creditAmount: data.creditAmount, dateRegistration: dateRegistration });
         }
     }
 
