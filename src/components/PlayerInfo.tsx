@@ -8,7 +8,6 @@ import Col from 'react-bootstrap/Col';
 import './PlayerInfo.css'
 import LoadingSpinner from './LoadingSpinner';
 
-
 function PlayerInfo() {
     const location = useLocation();
     const { href } = location.state;
@@ -25,19 +24,18 @@ function PlayerInfo() {
     // declare the async data fetching function
     const fetchData = async () => {
         setIsLoading(true);
-        const data = await fetch(href).then((response) => {
+        try {
+            const data = await fetch(href);
             setIsLoading(false);
-            if (response.ok) {
-                return response.json();
+            if (data.ok) {
+                return await data.json();
             }
             throw new Error('Something went wrong');
-        })
-            .catch((err: any) => {
-                console.log("This is the error: ", err);
-                setIsLoading(false);
-            });
-
-        return data;
+        }
+        catch (err: any) {
+            console.log("This is the error: ", err);
+            setIsLoading(false);
+        };
     }
 
     const mapToPlayer = (data: any) => {

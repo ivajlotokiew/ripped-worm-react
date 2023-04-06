@@ -74,10 +74,8 @@ function Players() {
     }
 
     const findPlayer = (player: Player) => {
-        console.log('Before: ', players);
         setPlayers([{ ...player }]);
         console.log('Player: ', player);
-        console.log('After: ', players);
     }
 
     const submit = (href: string) => {

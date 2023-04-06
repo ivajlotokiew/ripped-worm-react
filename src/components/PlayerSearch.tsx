@@ -9,14 +9,15 @@ function PlayerSearch(props: { findPlayer: (player: Player) => void }) {
     }
 
     const fetchResult = async (plName: string) => {
+        //TODO use debounce
         const url = `http://localhost:8080/api/players/search/findByPlayerName?playerName=${plName}`
         await fetch(url)
             .then(async (response) => {
                 if (response.ok) {
                     const data = await response.json();
                     const attrs = data?._links?.self.href.split('players/');
-                    const player = {
-                        ...data,
+                    const player: Player = {
+                        ...data, href: data?._links?.self.href, fasko: '',
                         id: attrs[1], url: attrs[0]
                     };
                     props.findPlayer(player);
