@@ -11,7 +11,7 @@ import './PlayerInfo.css'
 function PlayerInfo() {
     const location = useLocation();
     const { href } = location.state;
-    const [player, setPlayer] = useState<Player | undefined>();
+    const [player, setPlayer] = useState({ id: '', playerName: '', playerType: 'DEPOSIT', creditAmount: 0, dateRegistration: '' } as Player);
     const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
 
     useEffect(() => {
@@ -62,13 +62,22 @@ function PlayerInfo() {
         const requestOptions = {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: player?.id, playerName: player?.playerName, playerType: player?.playerType })
+            body: JSON.stringify({ ...player })
         }
         const url = 'http://localhost:8080/api/players/' + player?.id;
-        debugger;
-        await fetch(url, requestOptions).then(() => {
-            console.log("Success");
-        }).catch((err) => console.log(err));
+
+        fetch(url, requestOptions).then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+            .then((responseJson) => {
+                mapToPlayer(responseJson);
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
 
     return (
@@ -91,7 +100,7 @@ function PlayerInfo() {
                     </Form.Group>
 
                     <Form.Group as={Col} md="10">
-                        <Form.Label>Player type:</Form.Label>
+                        <Form.Label>Player type</Form.Label>
                         <Form.Select aria-label="Player type" value={player?.playerType} style={fieldsDisabled ? { cursor: "not-allowed" } : {}}
                             disabled={fieldsDisabled} onChange={handleSelectChange}>
                             <option>Choose a player type</option>
