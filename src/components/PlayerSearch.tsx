@@ -2,7 +2,7 @@ import { ChangeEvent } from 'react'
 import { Player } from './Players';
 
 
-function PlayerSearch(props: { findPlayer: (player: Player) => void }) {
+function PlayerSearch({ findPlayer }: { findPlayer: (player: Player) => void }) {
 
     const handleInputResponse = (event: ChangeEvent<HTMLInputElement>) => {
         fetchResult(event.target.value);
@@ -20,7 +20,7 @@ function PlayerSearch(props: { findPlayer: (player: Player) => void }) {
                         ...data, href: data?._links?.self.href, fasko: '',
                         id: attrs[1], url: attrs[0]
                     };
-                    props.findPlayer(player);
+                    findPlayer(player);
                 }
 
                 throw new Error('Something goes wrong')
@@ -31,7 +31,7 @@ function PlayerSearch(props: { findPlayer: (player: Player) => void }) {
     return (
         <>
             <label htmlFor="">Search: </label>
-            <input type="text" onChange={handleInputResponse} />
+            <input type="search" placeholder="Search..." onChange={handleInputResponse} />
         </>
     )
 }
