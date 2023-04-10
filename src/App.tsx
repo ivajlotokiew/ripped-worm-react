@@ -11,6 +11,8 @@ function App() {
     <>
       <div className="App">
         <header className="App-header">
+          {/* We shold uncomment the component if we want to check for use Imperatie Handle, 
+          <ParentImperativeHandle /> */}
           <SideBar />
           <Routes>
             <Route path="/" element={<Players />} />
