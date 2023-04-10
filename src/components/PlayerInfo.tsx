@@ -29,8 +29,9 @@ function PlayerInfo() {
             setIsLoading(false);
             if (data.ok) {
                 return await data.json();
+            } else {
+                throw new Error('Something went wrong');
             }
-            throw new Error('Something went wrong');
         }
         catch (err: any) {
             console.log("This is the error: ", err);
@@ -72,11 +73,12 @@ function PlayerInfo() {
         }
         const url = 'http://localhost:8080/api/players/' + player?.id;
 
-        fetch(url, requestOptions).then((response) => {
+        await fetch(url, requestOptions).then(async (response) => {
             if (response.ok) {
-                return response.json();
+                await response.json();
+            } else {
+                throw new Error('Something went wrong');
             }
-            throw new Error('Something went wrong');
         })
             .then((responseJson) => {
                 setIsLoading(false);

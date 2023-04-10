@@ -5,6 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import ItemsModal from './ItemsModal';
 import PlayerSearch from './PlayerSearch';
+import LoadingSpinner from './LoadingSpinner';
 
 export enum PlayerType {
     DEPOSIT = 'DEPOSIT',
@@ -31,30 +32,33 @@ export type Player = {
 
 function Players() {
     const [players, setPlayers] = useState<Player[] | []>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
         // call the function
-        fetchData()
-            // make sure to catch any error
-            .catch(console.error);
+        fetchData();
     }, [])
 
     // declare the async data fetching function
     const fetchData = async () => {
-        // get the data from the api
-        const data = await fetch('http://localhost:8080/api/players');
-        // convert the data to json
-        const json = await data.json();
+        setIsLoading(true);
+        try {
+            setIsLoading(false);
+            const data = await fetch('http://localhost:8080/api/players');
+            const json = await data.json();
 
-        // set state with the result if `isSubscribed` is true
-        const players = json._embedded.players.map((player: { _links: { player: { href: string; }; }; }) => {
-            const playerHref = player._links.player.href;
-            const attrs = playerHref.split('players/');
-            return { ...player, id: attrs[1], href: playerHref };
-        });
+            const players = json._embedded.players.map((player: { _links: { player: { href: string; }; }; }) => {
+                const playerHref = player._links.player.href;
+                const attrs = playerHref.split('players/');
+                return { ...player, id: attrs[1], href: playerHref };
+            });
 
-        setPlayers(players);
+            setPlayers(players);
+        } catch (err: any) {
+            console.log("This is the error: ", err);
+            setIsLoading(false);
+        };
     }
 
     const navigate = useNavigate();
@@ -74,8 +78,15 @@ function Players() {
     }
 
     const findPlayer = (player: Player) => {
-        setPlayers([{ ...player }]);
-        console.log('Player: ', player);
+        isEmpty(player) ? fetchData() : setPlayers([{ ...player }]);
+    }
+
+    const isEmpty = (obj: {}) => {
+        return Object.keys(obj).length === 0;
+    }
+
+    const setLoading = (loading: boolean) => {
+        setIsLoading(loading);
     }
 
     const submit = (href: string) => {
@@ -108,43 +119,43 @@ function Players() {
                     radius='0.5rem'
                     cursor="pointer"
                 > Add New Player </Button>
-                <PlayerSearch findPlayer={findPlayer} />
+                <PlayerSearch findPlayer={findPlayer} setIsLoading={setLoading} />
             </div>
             {
-                players?.map(({ id, href, playerName, playerType }) => (
-                    <div className="item-container" key={id}>
-                        <div className="item">
-                            <div className='item-details'>
-                                <div>Name: {playerName}</div>
-                                <div>Type: {playerType}</div>
-                            </div>
-                            <div className='item-actions'>
-                                <Button
-                                    color="#f5bc42"
-                                    height="30px"
-                                    onClick={() => routeChange(id, href)}
-                                    width="200px"
-                                    radius='0.5rem'
-                                    cursor="pointer"
-                                > Details </Button>
-                                <Button
-                                    color="#f5bc42"
-                                    height="30px"
-                                    onClick={() => submit(href)}
-                                    width="200px"
-                                    radius='0.5rem'
-                                    cursor="pointer"
-                                > Delete </Button>
+                isLoading ? <LoadingSpinner /> : (
+                    players?.map(({ id, href, playerName, playerType }) => (
+                        <div className="item-container" key={id}>
+                            <div className="item">
+                                <div className='item-details'>
+                                    <div>Name: {playerName}</div>
+                                    <div>Type: {playerType}</div>
+                                </div>
+                                <div className='item-actions'>
+                                    <Button
+                                        color="#f5bc42"
+                                        height="30px"
+                                        onClick={() => routeChange(id, href)}
+                                        width="200px"
+                                        radius='0.5rem'
+                                        cursor="pointer"
+                                    > Details </Button>
+                                    <Button
+                                        color="#f5bc42"
+                                        height="30px"
+                                        onClick={() => submit(href)}
+                                        width="200px"
+                                        radius='0.5rem'
+                                        cursor="pointer"
+                                    > Delete </Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))
-            }
+                    ))
+                )}
 
             {isOpen && <ItemsModal isOpen={isOpen} openModal={openModal} fetchData={fetchData} />}
         </>
     )
-
 }
 
 export default Players

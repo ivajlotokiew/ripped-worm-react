@@ -1,18 +1,25 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { Player } from './Players';
+import useDebounce from "../hooks/useDebounce";
 
-
-function PlayerSearch({ findPlayer }: { findPlayer: (player: Player) => void }) {
+function PlayerSearch({ findPlayer, setIsLoading }: { findPlayer: (player: Player) => void, setIsLoading: (loading: boolean) => void }) {
+    const [search, setSearch] = useState<string | null>(null);
+    const debouncedSearch = useDebounce(search, 1000);
 
     const handleInputResponse = (event: ChangeEvent<HTMLInputElement>) => {
-        fetchResult(event.target.value);
+        setIsLoading(true);
+        setSearch(event.target.value);
     }
 
-    const fetchResult = async (plName: string) => {
-        //TODO use debounce
-        const url = `http://localhost:8080/api/players/search/findByPlayerName?playerName=${plName}`
+    useEffect(() => {
+        fetchData();
+    }, [debouncedSearch]);
+
+    const fetchData = async () => {
+        const url = `http://localhost:8080/api/players/search/findByPlayerName?playerName=${debouncedSearch}`
         await fetch(url)
             .then(async (response) => {
+                setIsLoading(false);
                 if (response.ok) {
                     const data = await response.json();
                     const attrs = data?._links?.self.href.split('players/');
@@ -20,18 +27,25 @@ function PlayerSearch({ findPlayer }: { findPlayer: (player: Player) => void }) 
                         ...data, href: data?._links?.self.href, fasko: '',
                         id: attrs[1], url: attrs[0]
                     };
-                    findPlayer(player);
-                }
 
-                throw new Error('Something goes wrong')
+                    findPlayer(player);
+                } else {
+                    findPlayer({} as Player);
+                    throw new Error('Player Search, smt goes wrong: ');
+                }
             })
-            .catch((err) => console.log('Error: ', err));
+            .catch(err => {
+                setIsLoading(false);
+                console.log('Error: ', err);
+            });
     }
 
     return (
         <>
-            <label htmlFor="">Search: </label>
-            <input type="search" placeholder="Search..." onChange={handleInputResponse} />
+            <div>
+                <label htmlFor="" style={{ marginRight: '5px' }}>Search: </label>
+                <input type="search" placeholder="Search..." onChange={handleInputResponse} />
+            </div>
         </>
     )
 }
